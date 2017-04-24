@@ -199,8 +199,8 @@
         <board id="board.saml21_xplained_pro_b" value="Add" config="" content-id="Atmel.ASF" />
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>com.atmel.avrdbg.tool.powerdebugger</avrtool>
-    <avrtoolserialnumber>J50200002264</avrtoolserialnumber>
+    <avrtool>com.atmel.avrdbg.tool.edbg</avrtool>
+    <avrtoolserialnumber>ATML2241050200008894</avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1081020F</avrdeviceexpectedsignature>
     <avrtoolinterface>SWD</avrtoolinterface>
     <com_atmel_avrdbg_tool_powerdebugger>
@@ -983,6 +983,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ASF\sam0\utils\syscalls\gcc\syscalls.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\conf_qs_tc_timer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ISR_Handler\configure_tc.c">
