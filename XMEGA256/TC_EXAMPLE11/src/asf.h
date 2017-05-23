@@ -52,9 +52,15 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
+// From module: ADC - XMEGA A/AU Implementation
+#include <adc.h>
+
 // From module: CPU specific features
 #include <ccp.h>
 #include <xmega_reset_cause.h>
+
+// From module: Delay routines
+#include <delay.h>
 
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
@@ -77,6 +83,9 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: RTC32 - Real Time Counter 32
+#include <rtc32.h>
+
 // From module: Sleep Controller driver
 #include <sleep.h>
 
@@ -89,6 +98,9 @@
 
 // From module: TC - Timer Counter
 #include <tc.h>
+
+// From module: WDT - Watchdog Timer
+#include <wdt.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

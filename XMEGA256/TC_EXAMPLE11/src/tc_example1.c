@@ -92,17 +92,7 @@
 #include "avr/power.h"
 #include "avr/sleep.h"
 
-/**
- * \brief Timer Counter Overflow interrupt callback function
- *
- * This function is called when an overflow interrupt has occurred on
- * TIMER_EXAMPLE and toggles LED0.
- */
-static void example_ovf_interrupt_callback(void)
-{
-	gpio_toggle_pin(LED0_GPIO);
-}
-
+uint16_t adc_results=0;
 /**
  * \brief Timer Counter Capture/Compare A interrupt callback function
  *
@@ -111,17 +101,60 @@ static void example_ovf_interrupt_callback(void)
  */
 static void example_cca_interrupt_callback(void)
 {
-	gpio_toggle_pin(LED1_GPIO);
+	gpio_toggle_pin(LED0_GPIO);
+	//adc_results = ADCA_CH0RES;
+	//ADCA.CH0.INTFLAGS = ADC_CH_CHIF_bm;
+	//ADCA.CH0.CTRL=ADC_CH_START_bm;
 }
-/**
- * \brief Timer Counter Capture/Compare B interrupt callback function
- *
- * This function is called when an a capture compare channel B has occurred
- * TIMER_EXAMPLE and toggles LED2.
- */
-static void example_ccb_interrupt_callback(void)
-{
-	gpio_toggle_pin(LED2_GPIO);
+
+
+/************************************************************************/
+/* Initialize  ADC                                                                     */
+/************************************************************************/
+
+void ADC_init(void){
+CCP=0xD8;
+CLK.PSCTRL=CLK_PSADIV_2_gc;
+ADCA.CTRLB=ADC_CURRLIMIT_HIGH_gc;
+ADCA.REFCTRL=ADC_REFSEL_INTVCC_gc;
+ADCA.PRESCALER=ADC_PRESCALER_DIV4_gc;
+ADCA.CH0.CTRL= ADC_CH_INPUTMODE_SINGLEENDED_gc;
+ADCA.CH0.MUXCTRL=ADC_CH_MUXPOS_PIN0_gc;
+ADCA.CH0.INTCTRL=ADC_CH_INTMODE_COMPLETE_gc | ADC_CH_INTLVL_HI_gc;
+ADCA.CTRLA=ADC_ENABLE_bm;
+}
+
+
+
+/************************************************************************/
+/* Lowers power consumption                                                                     */
+/************************************************************************/
+void disable_JTAG(void){
+CCP = CCP_IOREG_gc;
+MCU.MCUCR=MCU_JTAGD_bm;
+
+}
+/************************************************************************/
+/*         Disable unused peripherals to save power                                                             */
+/************************************************************************/
+void disable_peripherals(void){
+PR.PRGEN=PR_USB_bm | PR_AES_bm  | PR_EVSYS_bm | PR_DMA_bm;
+
+PR.PRPA=PR_DAC_bm | PR_AC_bm;
+PR.PRPB=PR_DAC_bm | PR_AC_bm;
+
+PR.PRPC= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+PR.PRPD= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+PR.PRPE= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+PR.PRPF= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+}
+
+static void alarm(uint32_t time){
+
+rtc_set_alarm_relative(2);
+gpio_toggle_pin(LED0_GPIO);
+
+
 }
 
 
@@ -131,62 +164,26 @@ int main(void)
 	board_init();
 	sysclk_init();
 	sleepmgr_init();
+	disable_JTAG();
+	disable_peripherals();
+	//ADC_init();
 
+	adc_enable(&ADCA);
+
+	rtc_init();
+	rtc_set_callback(alarm);
+		
 	cpu_irq_enable();
-
-
-
-	/*
-	* Unmask clock for TIMER_EXAMPLE
-	*/
-	tc_enable(&TIMER_EXAMPLE);
-
-	/*
-	* Configure interrupts callback functions for TIMER_EXAMPLE
-	* overflow interrupt, CCA interrupt and CCB interrupt
-	*/
-	tc_set_overflow_interrupt_callback(&TIMER_EXAMPLE,
-			example_ovf_interrupt_callback);
-	tc_set_cca_interrupt_callback(&TIMER_EXAMPLE,
-			example_cca_interrupt_callback);
-	tc_set_ccb_interrupt_callback(&TIMER_EXAMPLE,
-			example_ccb_interrupt_callback);
-
-	/*
-	* Configure TC in normal mode, configure period, CCA and CCB
-	* Enable both CCA and CCB channels
-	*/
-
-	tc_set_wgm(&TIMER_EXAMPLE, TC_WG_NORMAL);
-	tc_write_period(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
-	tc_write_cc(&TIMER_EXAMPLE, TC_CCA, TIMER_EXAMPLE_PERIOD / 2);
-	tc_write_cc(&TIMER_EXAMPLE, TC_CCB, TIMER_EXAMPLE_PERIOD / 4);
-	tc_enable_cc_channels(&TIMER_EXAMPLE,(enum tc_cc_channel_mask_enable_t)(TC_CCAEN | TC_CCBEN));
-
-	/*
-	* Enable TC interrupts (overflow, CCA and CCB)
-	*/
-	tc_set_overflow_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
-	tc_set_cca_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
-	tc_set_ccb_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
-
-	/*
-	* Run TIMER_EXAMPLE at TIMER_EXAMPLE_PERIOD(31250Hz) resolution
-	*/
-	tc_set_resolution(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
-	set_sleep_mode(SLEEP_MODE_IDLE);
 	sleep_enable();
+	rtc_set_alarm_relative(3);
 
 	while(1){
+	set_sleep_mode(SLEEP_MODE_PWR_SAVE);
 	sleep_cpu();
+	/*
+	ADCA.CH0.CTRL = ADC_CH_START_bm;
+	PMIC.CTRL = PMIC_HILVLEN_bm;
+	*/
 	
 	}
-
-	/*
-	do {
-		
-		sleepmgr_enter_sleep();
-
-	} while (1);
-	*/
 }

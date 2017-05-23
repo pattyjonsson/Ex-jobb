@@ -57,7 +57,7 @@ struct tc_module *const module_inst)
 	adc_start_conversion(&adc_instance);
 	uint16_t result;
 	adc_read(&adc_instance, &result);
-	delay(50);
+	//delay(50);
 	//port_pin_toggle_output_level(LED0_PIN);
 }
 
