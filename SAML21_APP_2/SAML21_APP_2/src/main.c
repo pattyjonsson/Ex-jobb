@@ -58,7 +58,7 @@ void configure_adc(void)
 }
 //volatile uint16_t r;void read_adc(void){	//
 	adc_start_conversion(&adc_instance);
-	uint16_t result=0;	for(int i=0; i<1000; i++){		//delay(50);		adc_read(&adc_instance, &result);		//delay(50);		//r=result;		adc_value[i]=result;			}}
+	uint16_t result=0;	uint16_t send_value=0;	int sum=0;	for(int i=0; i<1000; i++){		//delay(50);		adc_read(&adc_instance, &result);		//delay(50);		//r=result;		adc_value[i]=result;			}	for(int i=0; i<1000; i++){		sum = sum +adc_value[i];	}	send_value = sum/1000;	delay(500);}
 
 int main (void)
 {

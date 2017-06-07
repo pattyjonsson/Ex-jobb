@@ -92,20 +92,9 @@
 #include "avr/power.h"
 #include "avr/sleep.h"
 
-uint16_t adc_results=0;
-/**
- * \brief Timer Counter Capture/Compare A interrupt callback function
- *
- * This function is called when an a capture compare channel A has occurred
- * TIMER_EXAMPLE and toggles LED1.
- */
-static void example_cca_interrupt_callback(void)
-{
-	gpio_toggle_pin(LED0_GPIO);
-	//adc_results = ADCA_CH0RES;
-	//ADCA.CH0.INTFLAGS = ADC_CH_CHIF_bm;
-	//ADCA.CH0.CTRL=ADC_CH_START_bm;
-}
+volatile uint16_t adc_results=0;
+volatile uint16_t re=0;
+volatile uint8_t deep_sleep = 0;
 
 
 /************************************************************************/
@@ -152,7 +141,9 @@ PR.PRPF= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_
 static void alarm(uint32_t time){
 
 rtc_set_alarm_relative(2);
-gpio_toggle_pin(LED0_GPIO);
+ADCA.CH0.CTRL = ADC_CH_START_bm;
+adc_results = ADCA_CH0RES;
+//gpio_toggle_pin(LED0_GPIO);
 
 
 }
@@ -163,10 +154,9 @@ int main(void)
 	pmic_init();
 	board_init();
 	sysclk_init();
-	sleepmgr_init();
 	disable_JTAG();
 	disable_peripherals();
-	//ADC_init();
+	ADC_init();
 
 	adc_enable(&ADCA);
 
@@ -176,14 +166,14 @@ int main(void)
 	cpu_irq_enable();
 	sleep_enable();
 	rtc_set_alarm_relative(3);
-
-	while(1){
 	set_sleep_mode(SLEEP_MODE_PWR_SAVE);
+	while(1){
+	
 	sleep_cpu();
-	/*
-	ADCA.CH0.CTRL = ADC_CH_START_bm;
-	PMIC.CTRL = PMIC_HILVLEN_bm;
-	*/
+	
+	
+	//PMIC.CTRL = PMIC_HILVLEN_bm;
+	
 	
 	}
 }

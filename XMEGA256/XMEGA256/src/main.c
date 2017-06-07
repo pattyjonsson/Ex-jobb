@@ -97,13 +97,8 @@ sleep_cpu();
 	while (1)
 	{
 	sleep_cpu();
-	//delay(5000);
-	/*
-	ioport_toggle_pin(LED0_GPIO);
-	delay(50);
-	ioport_toggle_pin(LED0_GPIO);
-	delay(5000);
-	*/
+
+
 	}
 	
 
