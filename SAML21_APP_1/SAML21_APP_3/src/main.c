@@ -32,98 +32,25 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-
-#define M 3
-
-void rtc_overflow_callback(void);
-void configure_rtc_count(void);
-void configure_rtc_callbacks(void);
-void configure_adc(void);
+#include "TC_config/config_tc.h"
+#include "ADC/configure_adc.h"
 
 
-struct rtc_module rtc_instance;
-struct adc_module adc_instance;
-
-void rtc_overflow_callback(void)
-{
-	uint16_t result;
-	adc_start_conversion(&adc_instance);
-	adc_read(&adc_instance, &result);
-
-	static float xbuff[M+1]={0};
-	static float b[M+1]={0.2500,0.2500,0.2500,0.2500};
-
-	float sum;
-
-	for (int k=M; k>0; k--){
-		xbuff[k]=xbuff[k-1];
-	}
-	xbuff[0]=(float)result;
-
-	for (int i=0; i<=M; i++){
-	sum +=(xbuff[i]*b[i]);
-	}
-
-	//Add "sending" value
-}
-
-
-
-void configure_adc(void)
-{
-	struct adc_config config_adc;
-	adc_get_config_defaults(&config_adc);
-	adc_init(&adc_instance, ADC, &config_adc);
-	adc_enable(&adc_instance);
-}
-
-
-
-
-void configure_rtc_count(void)
-{
-
-	struct rtc_count_config config_rtc_count;
-	rtc_count_get_config_defaults(&config_rtc_count);
-
-	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
-	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
-	#ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
-	config_rtc_count.continuously_update = true;
-	#endif
-
-	rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
-
-	rtc_count_enable(&rtc_instance);
-
-}
-
-
-void configure_rtc_callbacks(void)
-{
-
-	rtc_count_register_callback(
-	&rtc_instance, rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
-
-	rtc_count_enable_callback(&rtc_instance, RTC_COUNT_CALLBACK_OVERFLOW);
-
-}
 
 
 int main(void)
 {
 
 	system_init();
-
-	configure_rtc_count();
 	configure_adc();
+	configure_tc();
+	configure_tc_callbacks();
+	
+	ioport_set_pin_dir(PIN_PB05,IOPORT_DIR_OUTPUT);
+	system_interrupt_enable_global();
 
-	configure_rtc_callbacks();
-
-	rtc_count_set_period(&rtc_instance, 2000);
-
-
-	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+	
+	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE); 
 	while (true) {
 		system_sleep();
 		

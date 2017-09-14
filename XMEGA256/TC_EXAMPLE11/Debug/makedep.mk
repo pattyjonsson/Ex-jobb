@@ -24,7 +24,5 @@ src\ASF\xmega\drivers\rtc32\rtc32.c
 
 src\ASF\xmega\drivers\tc\tc.c
 
-src\ASF\xmega\drivers\wdt\wdt.c
-
 src\tc_example1.c
 

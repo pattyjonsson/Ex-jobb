@@ -32,12 +32,11 @@
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.delay" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.pmic" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.rtc32" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.tc" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.wdt" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.tc.example1" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
@@ -101,8 +100,6 @@
     <file path="src/Config/conf_rtc32.h" framework="" version="3.34.1" source="xmega\drivers\rtc32\module_config\conf_rtc32.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/delay/delay.h" framework="" version="3.34.1" source="common\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/delay/xmega/cycle_counter.h" framework="" version="3.34.1" source="common\services\delay\xmega\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/wdt/wdt.c" framework="" version="3.34.1" source="xmega\drivers\wdt\wdt.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/wdt/wdt.h" framework="" version="3.34.1" source="xmega\drivers\wdt\wdt.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/adc/xmega_aau/adc_aau.c" framework="" version="3.34.1" source="xmega\drivers\adc\xmega_aau\adc_aau.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/adc/adc.c" framework="" version="3.34.1" source="xmega\drivers\adc\adc.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/adc/adc.h" framework="" version="3.34.1" source="xmega\drivers\adc\adc.h" changed="False" content-id="Atmel.ASF" />
@@ -183,7 +180,6 @@
       <Value>../src/config</Value>
       <Value>../src/ASF/xmega/drivers/rtc32</Value>
       <Value>../src/ASF/common/services/delay</Value>
-      <Value>../src/ASF/xmega/drivers/wdt</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
@@ -222,7 +218,6 @@
       <Value>../src/config</Value>
       <Value>../src/ASF/xmega/drivers/rtc32</Value>
       <Value>../src/ASF/common/services/delay</Value>
-      <Value>../src/ASF/xmega/drivers/wdt</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
@@ -268,7 +263,6 @@
       <Value>../src/config</Value>
       <Value>../src/ASF/xmega/drivers/rtc32</Value>
       <Value>../src/ASF/common/services/delay</Value>
-      <Value>../src/ASF/xmega/drivers/wdt</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
@@ -308,7 +302,6 @@
       <Value>../src/config</Value>
       <Value>../src/ASF/xmega/drivers/rtc32</Value>
       <Value>../src/ASF/common/services/delay</Value>
-      <Value>../src/ASF/xmega/drivers/wdt</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
@@ -347,7 +340,6 @@
     <Folder Include="src\ASF\xmega\drivers\rtc32\" />
     <Folder Include="src\ASF\xmega\drivers\sleep\" />
     <Folder Include="src\ASF\xmega\drivers\tc\" />
-    <Folder Include="src\ASF\xmega\drivers\wdt\" />
     <Folder Include="src\ASF\xmega\utils\" />
     <Folder Include="src\ASF\xmega\utils\assembler\" />
     <Folder Include="src\ASF\xmega\utils\bit_handling\" />
@@ -527,12 +519,6 @@
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\config\conf_rtc32.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\xmega\drivers\wdt\wdt.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\xmega\drivers\wdt\wdt.h">
       <SubType>compile</SubType>
     </None>
     <None Include="src\config\conf_adc.h">

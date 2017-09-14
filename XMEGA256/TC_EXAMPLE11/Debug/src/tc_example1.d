@@ -57,7 +57,6 @@ src/tc_example1.d src/tc_example1.o: ../src/tc_example1.c \
  ../src/ASF/xmega/drivers/rtc32/rtc32.h ../src/config/conf_rtc32.h \
  ../src/ASF/common/services/sleepmgr/xmega/sleepmgr.h \
  ../src/ASF/xmega/drivers/tc/tc.h ../src/ASF/xmega/utils/status_codes.h \
- ../src/ASF/xmega/drivers/wdt/wdt.h \
  ../src/ASF/xmega/boards/xmega_a3bu_xplained/led.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\power.h
 
@@ -192,8 +191,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../src/ASF/xmega/drivers/tc/tc.h:
 
 ../src/ASF/xmega/utils/status_codes.h:
-
-../src/ASF/xmega/drivers/wdt/wdt.h:
 
 ../src/ASF/xmega/boards/xmega_a3bu_xplained/led.h:
 

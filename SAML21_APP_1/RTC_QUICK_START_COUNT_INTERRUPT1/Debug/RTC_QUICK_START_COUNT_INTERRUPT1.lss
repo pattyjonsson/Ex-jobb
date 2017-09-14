@@ -2950,11 +2950,11 @@ void Dummy_Handler(void)
 	if (!(adc_get_status(module_inst) & ADC_STATUS_RESULT_READY)) {
      e7c:	07db      	lsls	r3, r3, #31
      e7e:	d400      	bmi.n	e82 <rtc_overflow_callback+0x3a>
+{
 	adc_start_conversion(&adc_instance);
 	uint16_t result;
 	adc_read(&adc_instance, &result);
-	//port_pin_toggle_output_level(LED_0_PIN);
-//! [overflow_act]
+
 }
      e80:	4770      	bx	lr
 		/* Wait for synchronization */
@@ -2998,9 +2998,10 @@ void Dummy_Handler(void)
      ea8:	2000007c 	.word	0x2000007c
 
 00000eac <configure_adc>:
-//! [callback]
 
-
+/************************************************************************/
+/* Initialize the ADC                                                   */
+/************************************************************************/
 void configure_adc(void)
 {
      eac:	b510      	push	{r4, lr}
@@ -3055,9 +3056,9 @@ void configure_adc(void)
 
 00000efc <configure_rtc_count>:
 
-
-
-//! [initialize_rtc]
+/************************************************************************/
+/* Initialize the RTC                                                   */
+/************************************************************************/
 void configure_rtc_count(void)
 {
      efc:	b510      	push	{r4, lr}
@@ -3086,11 +3087,10 @@ void configure_rtc_count(void)
 		config->compare_values[i] = 0;
      f0c:	9302      	str	r3, [sp, #8]
      f0e:	9303      	str	r3, [sp, #12]
+
 	struct rtc_count_config config_rtc_count;
 	rtc_count_get_config_defaults(&config_rtc_count);
-//! [init_conf]
 
-//! [set_config]
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
      f10:	32ff      	adds	r2, #255	; 0xff
      f12:	800a      	strh	r2, [r1, #0]
@@ -3100,22 +3100,18 @@ void configure_rtc_count(void)
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config_rtc_count.continuously_update = true;
 #endif
-//! [set_config]
-//! [init_rtc]
+
 	rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
      f18:	4c04      	ldr	r4, [pc, #16]	; (f2c <configure_rtc_count+0x30>)
      f1a:	4905      	ldr	r1, [pc, #20]	; (f30 <configure_rtc_count+0x34>)
      f1c:	0020      	movs	r0, r4
      f1e:	4b05      	ldr	r3, [pc, #20]	; (f34 <configure_rtc_count+0x38>)
      f20:	4798      	blx	r3
-//! [init_rtc]
-
-//! [enable]
 	rtc_count_enable(&rtc_instance);
      f22:	0020      	movs	r0, r4
      f24:	4b04      	ldr	r3, [pc, #16]	; (f38 <configure_rtc_count+0x3c>)
      f26:	4798      	blx	r3
-//! [enable]
+
 }
      f28:	b004      	add	sp, #16
      f2a:	bd10      	pop	{r4, pc}
@@ -3125,13 +3121,14 @@ void configure_rtc_count(void)
      f38:	000005c1 	.word	0x000005c1
 
 00000f3c <configure_rtc_callbacks>:
-//! [initialize_rtc]
 
-//! [setup_callback]
+/************************************************************************/
+/* Setting up the callback                                              */
+/************************************************************************/
 void configure_rtc_callbacks(void)
 {
      f3c:	b510      	push	{r4, lr}
-	//! [reg_callback]
+
 	rtc_count_register_callback(
      f3e:	4c05      	ldr	r4, [pc, #20]	; (f54 <configure_rtc_callbacks+0x18>)
      f40:	220a      	movs	r2, #10
@@ -3140,14 +3137,12 @@ void configure_rtc_callbacks(void)
      f46:	4b05      	ldr	r3, [pc, #20]	; (f5c <configure_rtc_callbacks+0x20>)
      f48:	4798      	blx	r3
 			&rtc_instance, rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
-	//! [reg_callback]
-	//! [en_callback]
 	rtc_count_enable_callback(&rtc_instance, RTC_COUNT_CALLBACK_OVERFLOW);
      f4a:	210a      	movs	r1, #10
      f4c:	0020      	movs	r0, r4
      f4e:	4b04      	ldr	r3, [pc, #16]	; (f60 <configure_rtc_callbacks+0x24>)
      f50:	4798      	blx	r3
-	//! [en_callback]
+
 }
      f52:	bd10      	pop	{r4, pc}
      f54:	20000044 	.word	0x20000044
@@ -3156,63 +3151,54 @@ void configure_rtc_callbacks(void)
      f60:	000007d9 	.word	0x000007d9
 
 00000f64 <main>:
-//! [setup_callback]
+
 
 int main(void)
 {
      f64:	b510      	push	{r4, lr}
-//! [run_initialize_rtc]
-	/* Initialize system. Must configure conf_clocks.h first. */
-//! [system_init]
 	system_init();
-     f66:	4b0c      	ldr	r3, [pc, #48]	; (f98 <main+0x34>)
+     f66:	4b0b      	ldr	r3, [pc, #44]	; (f94 <main+0x30>)
      f68:	4798      	blx	r3
-//! [system_init]
 
 	/* Configure and enable RTC */
-//! [run_conf]
 	configure_rtc_count();
-     f6a:	4b0c      	ldr	r3, [pc, #48]	; (f9c <main+0x38>)
+     f6a:	4b0b      	ldr	r3, [pc, #44]	; (f98 <main+0x34>)
      f6c:	4798      	blx	r3
+	/* Configure and enable ADC */
 	configure_adc();
-     f6e:	4b0c      	ldr	r3, [pc, #48]	; (fa0 <main+0x3c>)
+     f6e:	4b0b      	ldr	r3, [pc, #44]	; (f9c <main+0x38>)
      f70:	4798      	blx	r3
-//! [run_conf]
+
 
 	/* Configure and enable callback */
-//! [run_callback]
 	configure_rtc_callbacks();
-     f72:	4b0c      	ldr	r3, [pc, #48]	; (fa4 <main+0x40>)
+     f72:	4b0b      	ldr	r3, [pc, #44]	; (fa0 <main+0x3c>)
      f74:	4798      	blx	r3
-//! [run_callback]
-
-	/* Set period */
-//! [period]
-	rtc_count_set_period(&rtc_instance, 2000);
-     f76:	21fa      	movs	r1, #250	; 0xfa
-     f78:	00c9      	lsls	r1, r1, #3
-     f7a:	480b      	ldr	r0, [pc, #44]	; (fa8 <main+0x44>)
-     f7c:	4b0b      	ldr	r3, [pc, #44]	; (fac <main+0x48>)
-     f7e:	4798      	blx	r3
+	/* Set period to 10 sec */
+	rtc_count_set_period(&rtc_instance, 10000);
+     f76:	490b      	ldr	r1, [pc, #44]	; (fa4 <main+0x40>)
+     f78:	480b      	ldr	r0, [pc, #44]	; (fa8 <main+0x44>)
+     f7a:	4b0c      	ldr	r3, [pc, #48]	; (fac <main+0x48>)
+     f7c:	4798      	blx	r3
 	PM->SLEEPCFG.reg = sleep_mode;
-     f80:	2204      	movs	r2, #4
-     f82:	2380      	movs	r3, #128	; 0x80
-     f84:	05db      	lsls	r3, r3, #23
-     f86:	705a      	strb	r2, [r3, #1]
+     f7e:	2204      	movs	r2, #4
+     f80:	2380      	movs	r3, #128	; 0x80
+     f82:	05db      	lsls	r3, r3, #23
+     f84:	705a      	strb	r2, [r3, #1]
 	while(PM->SLEEPCFG.reg != sleep_mode) ;
-     f88:	785a      	ldrb	r2, [r3, #1]
-     f8a:	2a04      	cmp	r2, #4
-     f8c:	d1fc      	bne.n	f88 <main+0x24>
+     f86:	785a      	ldrb	r2, [r3, #1]
+     f88:	2a04      	cmp	r2, #4
+     f8a:	d1fc      	bne.n	f86 <main+0x22>
   __ASM volatile ("dsb");
-     f8e:	f3bf 8f4f 	dsb	sy
+     f8c:	f3bf 8f4f 	dsb	sy
   __ASM volatile ("wfi");
-     f92:	bf30      	wfi
-     f94:	e7fb      	b.n	f8e <main+0x2a>
-     f96:	46c0      	nop			; (mov r8, r8)
-     f98:	00000d81 	.word	0x00000d81
-     f9c:	00000efd 	.word	0x00000efd
-     fa0:	00000ead 	.word	0x00000ead
-     fa4:	00000f3d 	.word	0x00000f3d
+     f90:	bf30      	wfi
+     f92:	e7fb      	b.n	f8c <main+0x28>
+     f94:	00000d81 	.word	0x00000d81
+     f98:	00000efd 	.word	0x00000efd
+     f9c:	00000ead 	.word	0x00000ead
+     fa0:	00000f3d 	.word	0x00000f3d
+     fa4:	00002710 	.word	0x00002710
      fa8:	20000044 	.word	0x20000044
      fac:	0000076d 	.word	0x0000076d
 

@@ -92,13 +92,13 @@
 #include "avr/power.h"
 #include "avr/sleep.h"
 
-volatile uint16_t adc_results=0;
-volatile uint16_t re=0;
-volatile uint8_t deep_sleep = 0;
+
+volatile uint16_t send_value=0;
+
 
 
 /************************************************************************/
-/* Initialize  ADC                                                                     */
+/* Initialize  ADC                                                      */
 /************************************************************************/
 
 void ADC_init(void){
@@ -116,15 +116,14 @@ ADCA.CTRLA=ADC_ENABLE_bm;
 
 
 /************************************************************************/
-/* Lowers power consumption                                                                     */
+/* Disable JTAG to lower power consumption                              */
 /************************************************************************/
 void disable_JTAG(void){
 CCP = CCP_IOREG_gc;
 MCU.MCUCR=MCU_JTAGD_bm;
-
 }
 /************************************************************************/
-/*         Disable unused peripherals to save power                                                             */
+/* Disable unused peripherals to save power                             */
 /************************************************************************/
 void disable_peripherals(void){
 PR.PRGEN=PR_USB_bm | PR_AES_bm  | PR_EVSYS_bm | PR_DMA_bm;
@@ -138,42 +137,47 @@ PR.PRPE= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_
 PR.PRPF= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
 }
 
+/************************************************************************/
+/* With every interrupt get value from the ADC and save value           */
+/************************************************************************/
 static void alarm(uint32_t time){
-
-rtc_set_alarm_relative(2);
-ADCA.CH0.CTRL = ADC_CH_START_bm;
-adc_results = ADCA_CH0RES;
-//gpio_toggle_pin(LED0_GPIO);
-
-
+uint32_t invalue=0;
+invalue = adc_get_result(&ADCA,ADC_CH0);
+adc_start_conversion(&ADCA,ADC_CH0);
+rtc_set_alarm_relative(9);
+send_value = invalue;			//"Sending" value
 }
 
 
 int main(void)
 {
+	/*Setup the system*/
 	pmic_init();
 	board_init();
 	sysclk_init();
+
+	/*Disable JTAG and other unused peripherals to save power*/
 	disable_JTAG();
 	disable_peripherals();
-	ADC_init();
 
+	/*Initialize the ADC */
 	adc_enable(&ADCA);
+	adc_start_conversion(&ADCA, ADC_CH0);
 
+	/*Initialize the RTC*/
 	rtc_init();
 	rtc_set_callback(alarm);
-		
+	rtc_set_alarm_relative(10);		//RTC-interrupt every 10 seconds
+
+	/*Initialize interrupts*/
 	cpu_irq_enable();
-	sleep_enable();
-	rtc_set_alarm_relative(3);
+
+	/*Sleep mode set to power-save-mode*/
 	set_sleep_mode(SLEEP_MODE_PWR_SAVE);
+	
+	/*Sleep until interrupt*/
 	while(1){
-	
-	sleep_cpu();
-	
-	
-	//PMIC.CTRL = PMIC_HILVLEN_bm;
-	
-	
+	sleep_enable();
+	sleep_cpu();	
 	}
 }

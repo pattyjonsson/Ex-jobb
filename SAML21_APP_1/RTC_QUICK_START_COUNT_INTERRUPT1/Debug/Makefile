@@ -178,9 +178,9 @@ src/ASF/sam0/utils/cmsis/saml21/source/system_saml21.d \
 src/ASF/sam0/utils/syscalls/gcc/syscalls.d \
 src/qs_rtc_count_callback.d
 
-OUTPUT_FILE_PATH +=RTC_QUICK_START_COUNT_INTERRUPT1.elf
+OUTPUT_FILE_PATH +=SAM21_APP_1.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=RTC_QUICK_START_COUNT_INTERRUPT1.elf
+OUTPUT_FILE_PATH_AS_ARGS +=SAM21_APP_1.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -340,14 +340,14 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: ARM/GNU Linker : 6.2.1
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -mthumb -Wl,-Map="RTC_QUICK_START_COUNT_INTERRUPT1.map" --specs=nano.specs -Wl,--start-group -larm_cortexM0l_math -lm  -Wl,--end-group -L"../src/ASF/thirdparty/CMSIS/Lib/GCC"  -Wl,--gc-sections -mcpu=cortex-m0plus -Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam0/utils/linker_scripts/saml21/gcc/saml21j18b_flash.ld  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -mthumb -Wl,-Map="SAM21_APP_1.map" --specs=nano.specs -Wl,--start-group -larm_cortexM0l_math -lm  -Wl,--end-group -L"../src/ASF/thirdparty/CMSIS/Lib/GCC"  -Wl,--gc-sections -mcpu=cortex-m0plus -Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam0/utils/linker_scripts/saml21/gcc/saml21j18b_flash.ld  
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O binary "RTC_QUICK_START_COUNT_INTERRUPT1.elf" "RTC_QUICK_START_COUNT_INTERRUPT1.bin"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "RTC_QUICK_START_COUNT_INTERRUPT1.elf" "RTC_QUICK_START_COUNT_INTERRUPT1.hex"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O binary "RTC_QUICK_START_COUNT_INTERRUPT1.elf" "RTC_QUICK_START_COUNT_INTERRUPT1.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objdump.exe" -h -S "RTC_QUICK_START_COUNT_INTERRUPT1.elf" > "RTC_QUICK_START_COUNT_INTERRUPT1.lss"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "RTC_QUICK_START_COUNT_INTERRUPT1.elf" "RTC_QUICK_START_COUNT_INTERRUPT1.srec"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-size.exe" "RTC_QUICK_START_COUNT_INTERRUPT1.elf"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O binary "SAM21_APP_1.elf" "SAM21_APP_1.bin"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "SAM21_APP_1.elf" "SAM21_APP_1.hex"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O binary "SAM21_APP_1.elf" "SAM21_APP_1.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objdump.exe" -h -S "SAM21_APP_1.elf" > "SAM21_APP_1.lss"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "SAM21_APP_1.elf" "SAM21_APP_1.srec"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-size.exe" "SAM21_APP_1.elf"
 	
 	
 
@@ -359,5 +359,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "RTC_QUICK_START_COUNT_INTERRUPT1.elf" "RTC_QUICK_START_COUNT_INTERRUPT1.a" "RTC_QUICK_START_COUNT_INTERRUPT1.hex" "RTC_QUICK_START_COUNT_INTERRUPT1.bin" "RTC_QUICK_START_COUNT_INTERRUPT1.lss" "RTC_QUICK_START_COUNT_INTERRUPT1.eep" "RTC_QUICK_START_COUNT_INTERRUPT1.map" "RTC_QUICK_START_COUNT_INTERRUPT1.srec"
+	rm -rf "SAM21_APP_1.elf" "SAM21_APP_1.a" "SAM21_APP_1.hex" "SAM21_APP_1.bin" "SAM21_APP_1.lss" "SAM21_APP_1.eep" "SAM21_APP_1.map" "SAM21_APP_1.srec"
 	

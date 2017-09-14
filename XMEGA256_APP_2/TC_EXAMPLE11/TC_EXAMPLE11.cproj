@@ -33,6 +33,7 @@
     <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.tc" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.tc.example1" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
@@ -91,6 +92,10 @@
     <file path="src/ASF/xmega/utils/preprocessor/tpaste.h" framework="" version="" source="xmega/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/utils/progmem.h" framework="" version="" source="xmega/utils/progmem.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/utils/status_codes.h" framework="" version="" source="xmega/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/adc/xmega_aau/adc_aau.c" framework="" version="3.34.1" source="xmega\drivers\adc\xmega_aau\adc_aau.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/adc/adc.c" framework="" version="3.34.1" source="xmega\drivers\adc\adc.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/adc/adc.h" framework="" version="3.34.1" source="xmega\drivers\adc\adc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_adc.h" framework="" version="3.34.1" source="xmega\drivers\adc\module_config\conf_adc.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.34.1/xmega.drivers.tc.example1.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
@@ -165,6 +170,7 @@
       <Value>../src/ASF/common/boards</Value>
       <Value>../src</Value>
       <Value>../src/config</Value>
+      <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -200,6 +206,7 @@
       <Value>../src/ASF/common/boards</Value>
       <Value>../src</Value>
       <Value>../src/config</Value>
+      <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
 </AvrGcc>
@@ -242,6 +249,7 @@
       <Value>../src/ASF/common/boards</Value>
       <Value>../src</Value>
       <Value>../src/config</Value>
+      <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -278,6 +286,7 @@
       <Value>../src/ASF/common/boards</Value>
       <Value>../src</Value>
       <Value>../src/config</Value>
+      <Value>../src/ASF/xmega/drivers/adc</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
   <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
@@ -305,6 +314,8 @@
     <Folder Include="src\ASF\xmega\boards\" />
     <Folder Include="src\ASF\xmega\boards\xmega_a3bu_xplained\" />
     <Folder Include="src\ASF\xmega\drivers\" />
+    <Folder Include="src\ASF\xmega\drivers\adc\" />
+    <Folder Include="src\ASF\xmega\drivers\adc\xmega_aau\" />
     <Folder Include="src\ASF\xmega\drivers\cpu\" />
     <Folder Include="src\ASF\xmega\drivers\nvm\" />
     <Folder Include="src\ASF\xmega\drivers\pmic\" />
@@ -317,9 +328,6 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="koefficienter.h">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
@@ -452,6 +460,15 @@
     <None Include="src\ASF\xmega\boards\xmega_a3bu_xplained\xmega_a3bu_xplained.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\ASF\xmega\drivers\adc\adc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\xmega\drivers\adc\adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\xmega\drivers\adc\xmega_aau\adc_aau.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ASF\xmega\drivers\cpu\ccp.s">
       <SubType>compile</SubType>
     </Compile>
@@ -468,6 +485,12 @@
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\ASF\xmega\drivers\tc\tc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\config\conf_adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\koefficienter.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tc_example1.c">

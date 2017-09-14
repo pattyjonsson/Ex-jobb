@@ -3,33 +3,33 @@ TC_EXAMPLE11.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000015bc  00000000  00000000  00000074  2**1
+  0 .text         000015d4  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00802000  00802000  00001630  2**0
+  1 .data         00000000  00802000  00802000  00001648  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000058  00802000  00802000  00001630  2**0
+  2 .bss          00000058  00802000  00802000  00001648  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00001630  2**0
+  3 .comment      00000030  00000000  00000000  00001648  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000044  00000000  00000000  00001660  2**2
+  4 .note.gnu.avr.deviceinfo 00000044  00000000  00000000  00001678  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000390  00000000  00000000  000016a8  2**3
+  5 .debug_aranges 00000390  00000000  00000000  000016c0  2**3
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00008986  00000000  00000000  00001a38  2**0
+  6 .debug_info   00008b09  00000000  00000000  00001a50  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00004355  00000000  00000000  0000a3be  2**0
+  7 .debug_abbrev 00004407  00000000  00000000  0000a559  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00004961  00000000  00000000  0000e713  2**0
+  8 .debug_line   0000499a  00000000  00000000  0000e960  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000141c  00000000  00000000  00013074  2**2
+  9 .debug_frame  00001448  00000000  00000000  000132fc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00030f2b  00000000  00000000  00014490  2**0
+ 10 .debug_str    00030f0a  00000000  00000000  00014744  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000034a3  00000000  00000000  000453bb  2**0
+ 11 .debug_loc    000035dc  00000000  00000000  0004564e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000002d8  00000000  00000000  0004885e  2**0
+ 12 .debug_ranges 000002d8  00000000  00000000  00048c2a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_macro  0000b1ba  00000000  00000000  00048b36  2**0
+ 13 .debug_macro  0000b1b1  00000000  00000000  00048f02  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -293,7 +293,7 @@ Disassembly of section .text:
      20c:	10 e2       	ldi	r17, 0x20	; 32
      20e:	a0 e0       	ldi	r26, 0x00	; 0
      210:	b0 e2       	ldi	r27, 0x20	; 32
-     212:	ec eb       	ldi	r30, 0xBC	; 188
+     212:	e4 ed       	ldi	r30, 0xD4	; 212
      214:	f5 e1       	ldi	r31, 0x15	; 21
      216:	00 e0       	ldi	r16, 0x00	; 0
      218:	0b bf       	out	0x3b, r16	; 59
@@ -317,8 +317,8 @@ Disassembly of section .text:
      230:	a8 35       	cpi	r26, 0x58	; 88
      232:	b2 07       	cpc	r27, r18
      234:	e1 f7       	brne	.-8      	; 0x22e <.do_clear_bss_loop>
-     236:	0e 94 b8 0a 	call	0x1570	; 0x1570 <main>
-     23a:	0c 94 dc 0a 	jmp	0x15b8	; 0x15b8 <_exit>
+     236:	0e 94 b6 0a 	call	0x156c	; 0x156c <main>
+     23a:	0c 94 e8 0a 	jmp	0x15d0	; 0x15d0 <_exit>
 
 0000023e <__bad_interrupt>:
      23e:	e0 ce       	rjmp	.-576    	; 0x0 <__vectors>
@@ -3374,104 +3374,205 @@ ISR(TCF0_CCD_vect)
     14fe:	18 95       	reti
 
 00001500 <alarm>:
+ADCA.REFCTRL=ADC_REFSEL_INTVCC_gc;
+ADCA.PRESCALER=ADC_PRESCALER_DIV4_gc;
+ADCA.CH0.CTRL= ADC_CH_INPUTMODE_SINGLEENDED_gc;
+ADCA.CH0.MUXCTRL=ADC_CH_MUXPOS_PIN0_gc;
+ADCA.CH0.INTCTRL=ADC_CH_INTMODE_COMPLETE_gc | ADC_CH_INTLVL_HI_gc;
+ADCA.CTRLA=ADC_ENABLE_bm;
+    1500:	0f 93       	push	r16
+    1502:	1f 93       	push	r17
+    1504:	cf 93       	push	r28
+    1506:	df 93       	push	r29
+    1508:	1f 92       	push	r1
+    150a:	cd b7       	in	r28, 0x3d	; 61
+    150c:	de b7       	in	r29, 0x3e	; 62
+    150e:	e0 e0       	ldi	r30, 0x00	; 0
+    1510:	f2 e0       	ldi	r31, 0x02	; 2
+    1512:	04 a1       	ldd	r16, Z+36	; 0x24
+    1514:	15 a1       	ldd	r17, Z+37	; 0x25
+    1516:	8f b7       	in	r24, 0x3f	; 63
+    1518:	89 83       	std	Y+1, r24	; 0x01
+    151a:	f8 94       	cli
+    151c:	99 81       	ldd	r25, Y+1	; 0x01
+    151e:	80 81       	ld	r24, Z
+    1520:	84 60       	ori	r24, 0x04	; 4
+    1522:	80 83       	st	Z, r24
+    1524:	9f bf       	out	0x3f, r25	; 63
+    1526:	02 d9       	rcall	.-3580   	; 0x72c <rtc_get_time>
+    1528:	67 5f       	subi	r22, 0xF7	; 247
+    152a:	7f 4f       	sbci	r23, 0xFF	; 255
+    152c:	8f 4f       	sbci	r24, 0xFF	; 255
+    152e:	9f 4f       	sbci	r25, 0xFF	; 255
+    1530:	0e d9       	rcall	.-3556   	; 0x74e <rtc_set_alarm>
+    1532:	00 93 4a 20 	sts	0x204A, r16	; 0x80204a <send_value>
+    1536:	10 93 4b 20 	sts	0x204B, r17	; 0x80204b <send_value+0x1>
+    153a:	0f 90       	pop	r0
+    153c:	df 91       	pop	r29
+    153e:	cf 91       	pop	r28
+    1540:	1f 91       	pop	r17
+    1542:	0f 91       	pop	r16
+    1544:	08 95       	ret
+
+00001546 <disable_JTAG>:
+
+/************************************************************************/
+/* Disable JTAG to lower power consumption                              */
+/************************************************************************/
+void disable_JTAG(void){
+CCP = CCP_IOREG_gc;
+    1546:	88 ed       	ldi	r24, 0xD8	; 216
+    1548:	84 bf       	out	0x34, r24	; 52
+MCU.MCUCR=MCU_JTAGD_bm;
+    154a:	81 e0       	ldi	r24, 0x01	; 1
+    154c:	80 93 96 00 	sts	0x0096, r24	; 0x800096 <__TEXT_REGION_LENGTH__+0x700096>
+    1550:	08 95       	ret
+
+00001552 <disable_peripherals>:
+}
+/************************************************************************/
+/* Disable unused peripherals to save power                             */
+/************************************************************************/
+void disable_peripherals(void){
+PR.PRGEN=PR_USB_bm | PR_AES_bm  | PR_EVSYS_bm | PR_DMA_bm;
+    1552:	e0 e7       	ldi	r30, 0x70	; 112
+    1554:	f0 e0       	ldi	r31, 0x00	; 0
+    1556:	83 e5       	ldi	r24, 0x53	; 83
+    1558:	80 83       	st	Z, r24
+
+PR.PRPA=PR_DAC_bm | PR_AC_bm;
+    155a:	85 e0       	ldi	r24, 0x05	; 5
+    155c:	81 83       	std	Z+1, r24	; 0x01
+PR.PRPB=PR_DAC_bm | PR_AC_bm;
+    155e:	82 83       	std	Z+2, r24	; 0x02
+
+PR.PRPC= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+    1560:	8f e7       	ldi	r24, 0x7F	; 127
+    1562:	83 83       	std	Z+3, r24	; 0x03
 PR.PRPD= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+    1564:	84 83       	std	Z+4, r24	; 0x04
 PR.PRPE= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+    1566:	85 83       	std	Z+5, r24	; 0x05
 PR.PRPF= PR_TWI_bm | PR_USART0_bm | PR_USART1_bm | PR_SPI_bm | PR_HIRES_bm | PR_TC0_bm | PR_TC1_bm;
+    1568:	86 83       	std	Z+6, r24	; 0x06
+    156a:	08 95       	ret
+
+0000156c <main>:
+send_value = invalue;			//"Sending" value
 }
 
-static void alarm(uint32_t time){
-    1500:	15 d9       	rcall	.-3542   	; 0x72c <rtc_get_time>
-    1502:	6e 5f       	subi	r22, 0xFE	; 254
-    1504:	7f 4f       	sbci	r23, 0xFF	; 255
-    1506:	8f 4f       	sbci	r24, 0xFF	; 255
-    1508:	9f 4f       	sbci	r25, 0xFF	; 255
-    150a:	21 d9       	rcall	.-3518   	; 0x74e <rtc_set_alarm>
-    150c:	80 e8       	ldi	r24, 0x80	; 128
-    150e:	80 93 20 02 	sts	0x0220, r24	; 0x800220 <__TEXT_REGION_LENGTH__+0x700220>
-    1512:	80 91 10 02 	lds	r24, 0x0210	; 0x800210 <__TEXT_REGION_LENGTH__+0x700210>
-    1516:	90 91 11 02 	lds	r25, 0x0211	; 0x800211 <__TEXT_REGION_LENGTH__+0x700211>
-    151a:	80 93 4a 20 	sts	0x204A, r24	; 0x80204a <adc_results>
-    151e:	90 93 4b 20 	sts	0x204B, r25	; 0x80204b <adc_results+0x1>
-    1522:	08 95       	ret
 
-00001524 <ADC_init>:
-    1524:	88 ed       	ldi	r24, 0xD8	; 216
-    1526:	84 bf       	out	0x34, r24	; 52
-    1528:	84 e0       	ldi	r24, 0x04	; 4
-    152a:	80 93 41 00 	sts	0x0041, r24	; 0x800041 <__TEXT_REGION_LENGTH__+0x700041>
-    152e:	e0 e0       	ldi	r30, 0x00	; 0
-    1530:	f2 e0       	ldi	r31, 0x02	; 2
-    1532:	80 e6       	ldi	r24, 0x60	; 96
-    1534:	81 83       	std	Z+1, r24	; 0x01
-    1536:	80 e1       	ldi	r24, 0x10	; 16
-    1538:	82 83       	std	Z+2, r24	; 0x02
-    153a:	14 82       	std	Z+4, r1	; 0x04
-    153c:	81 e0       	ldi	r24, 0x01	; 1
-    153e:	80 a3       	std	Z+32, r24	; 0x20
-    1540:	11 a2       	std	Z+33, r1	; 0x21
-    1542:	93 e0       	ldi	r25, 0x03	; 3
-    1544:	92 a3       	std	Z+34, r25	; 0x22
-    1546:	80 83       	st	Z, r24
-    1548:	08 95       	ret
+int main(void)
+{
+    156c:	cf 93       	push	r28
+    156e:	df 93       	push	r29
+    1570:	1f 92       	push	r1
+    1572:	cd b7       	in	r28, 0x3d	; 61
+    1574:	de b7       	in	r29, 0x3e	; 62
+ * Enables all interrupt levels, with vectors located in the application section
+ * and fixed priority scheduling.
+ */
+static inline void pmic_init(void)
+{
+	PMIC.CTRL = PMIC_LVL_LOW | PMIC_LVL_MEDIUM |
+    1576:	87 e0       	ldi	r24, 0x07	; 7
+    1578:	80 93 a2 00 	sts	0x00A2, r24	; 0x8000a2 <__TEXT_REGION_LENGTH__+0x7000a2>
+	/*Setup the system*/
+	pmic_init();
+	board_init();
+    157c:	0e 94 6d 01 	call	0x2da	; 0x2da <board_init>
+	sysclk_init();
+    1580:	0e 94 20 01 	call	0x240	; 0x240 <sysclk_init>
 
-0000154a <disable_JTAG>:
-    154a:	88 ed       	ldi	r24, 0xD8	; 216
-    154c:	84 bf       	out	0x34, r24	; 52
-    154e:	81 e0       	ldi	r24, 0x01	; 1
-    1550:	80 93 96 00 	sts	0x0096, r24	; 0x800096 <__TEXT_REGION_LENGTH__+0x700096>
-    1554:	08 95       	ret
+	/*Disable JTAG and other unused peripherals to save power*/
+	disable_JTAG();
+	disable_peripherals();
+    1584:	e0 df       	rcall	.-64     	; 0x1546 <disable_JTAG>
 
-00001556 <disable_peripherals>:
-    1556:	e0 e7       	ldi	r30, 0x70	; 112
-    1558:	f0 e0       	ldi	r31, 0x00	; 0
-    155a:	83 e5       	ldi	r24, 0x53	; 83
-    155c:	80 83       	st	Z, r24
-    155e:	85 e0       	ldi	r24, 0x05	; 5
-    1560:	81 83       	std	Z+1, r24	; 0x01
-    1562:	82 83       	std	Z+2, r24	; 0x02
-    1564:	8f e7       	ldi	r24, 0x7F	; 127
-    1566:	83 83       	std	Z+3, r24	; 0x03
-    1568:	84 83       	std	Z+4, r24	; 0x04
-    156a:	85 83       	std	Z+5, r24	; 0x05
-    156c:	86 83       	std	Z+6, r24	; 0x06
-    156e:	08 95       	ret
+	/*Initialize the ADC */
+	adc_enable(&ADCA);
+    1586:	e5 df       	rcall	.-54     	; 0x1552 <disable_peripherals>
+    1588:	80 e0       	ldi	r24, 0x00	; 0
+    158a:	92 e0       	ldi	r25, 0x02	; 2
+    158c:	0e 94 c9 01 	call	0x392	; 0x392 <adc_enable>
 
-00001570 <main>:
-    1570:	87 e0       	ldi	r24, 0x07	; 7
-    1572:	80 93 a2 00 	sts	0x00A2, r24	; 0x8000a2 <__TEXT_REGION_LENGTH__+0x7000a2>
-    1576:	0e 94 6d 01 	call	0x2da	; 0x2da <board_init>
-    157a:	0e 94 20 01 	call	0x240	; 0x240 <sysclk_init>
-    157e:	e5 df       	rcall	.-54     	; 0x154a <disable_JTAG>
-    1580:	ea df       	rcall	.-44     	; 0x1556 <disable_peripherals>
-    1582:	d0 df       	rcall	.-96     	; 0x1524 <ADC_init>
-    1584:	80 e0       	ldi	r24, 0x00	; 0
-    1586:	92 e0       	ldi	r25, 0x02	; 2
-    1588:	0e 94 c9 01 	call	0x392	; 0x392 <adc_enable>
-    158c:	f0 d8       	rcall	.-3616   	; 0x76e <rtc_init>
-    158e:	80 e8       	ldi	r24, 0x80	; 128
-    1590:	9a e0       	ldi	r25, 0x0A	; 10
-    1592:	e8 d8       	rcall	.-3632   	; 0x764 <rtc_set_callback>
-    1594:	78 94       	sei
-    1596:	c8 e4       	ldi	r28, 0x48	; 72
-    1598:	d0 e0       	ldi	r29, 0x00	; 0
-    159a:	88 81       	ld	r24, Y
-    159c:	81 60       	ori	r24, 0x01	; 1
-    159e:	88 83       	st	Y, r24
-    15a0:	c5 d8       	rcall	.-3702   	; 0x72c <rtc_get_time>
-    15a2:	6d 5f       	subi	r22, 0xFD	; 253
-    15a4:	7f 4f       	sbci	r23, 0xFF	; 255
-    15a6:	8f 4f       	sbci	r24, 0xFF	; 255
-    15a8:	9f 4f       	sbci	r25, 0xFF	; 255
-    15aa:	d1 d8       	rcall	.-3678   	; 0x74e <rtc_set_alarm>
-    15ac:	88 81       	ld	r24, Y
-    15ae:	81 7f       	andi	r24, 0xF1	; 241
-    15b0:	86 60       	ori	r24, 0x06	; 6
-    15b2:	88 83       	st	Y, r24
-    15b4:	88 95       	sleep
-    15b6:	fe cf       	rjmp	.-4      	; 0x15b4 <main+0x44>
+typedef uint8_t irqflags_t;
 
-000015b8 <_exit>:
-    15b8:	f8 94       	cli
+static inline irqflags_t cpu_irq_save(void)
+{
+	volatile irqflags_t flags = SREG;
+    1590:	8f b7       	in	r24, 0x3f	; 63
+	cpu_irq_disable();
+    1592:	89 83       	std	Y+1, r24	; 0x01
+	return flags;
+    1594:	f8 94       	cli
+ */
+static inline void adc_start_conversion(ADC_t *adc, uint8_t ch_mask)
+{
+	irqflags_t flags = cpu_irq_save();
+#if !XMEGA_E
+	adc->CTRLA |= ch_mask << ADC_CH0START_bp;
+    1596:	99 81       	ldd	r25, Y+1	; 0x01
+    1598:	e0 e0       	ldi	r30, 0x00	; 0
+    159a:	f2 e0       	ldi	r31, 0x02	; 2
+    159c:	80 81       	ld	r24, Z
+}
 
-000015ba <__stop_program>:
-    15ba:	ff cf       	rjmp	.-2      	; 0x15ba <__stop_program>
+static inline void cpu_irq_restore(irqflags_t flags)
+{
+	barrier();
+	SREG = flags;
+    159e:	84 60       	ori	r24, 0x04	; 4
+	adc_start_conversion(&ADCA, ADC_CH0);
+
+	/*Initialize the RTC*/
+	rtc_init();
+	rtc_set_callback(alarm);
+    15a0:	80 83       	st	Z, r24
+    15a2:	9f bf       	out	0x3f, r25	; 63
+    15a4:	e4 d8       	rcall	.-3640   	; 0x76e <rtc_init>
+ */
+static inline void rtc_set_alarm_relative(uint32_t offset)
+{
+	Assert(offset >= 2);
+
+	rtc_set_alarm(rtc_get_time() + offset);
+    15a6:	80 e8       	ldi	r24, 0x80	; 128
+    15a8:	9a e0       	ldi	r25, 0x0A	; 10
+    15aa:	dc d8       	rcall	.-3656   	; 0x764 <rtc_set_callback>
+    15ac:	bf d8       	rcall	.-3714   	; 0x72c <rtc_get_time>
+    15ae:	66 5f       	subi	r22, 0xF6	; 246
+    15b0:	7f 4f       	sbci	r23, 0xFF	; 255
+    15b2:	8f 4f       	sbci	r24, 0xFF	; 255
+	rtc_set_alarm_relative(10);		//RTC-interrupt every 10 seconds
+
+	/*Initialize interrupts*/
+	cpu_irq_enable();
+    15b4:	9f 4f       	sbci	r25, 0xFF	; 255
+
+	/*Sleep mode set to power-save-mode*/
+	set_sleep_mode(SLEEP_MODE_PWR_SAVE);
+    15b6:	cb d8       	rcall	.-3690   	; 0x74e <rtc_set_alarm>
+    15b8:	78 94       	sei
+    15ba:	e8 e4       	ldi	r30, 0x48	; 72
+    15bc:	f0 e0       	ldi	r31, 0x00	; 0
+    15be:	80 81       	ld	r24, Z
+    15c0:	81 7f       	andi	r24, 0xF1	; 241
+	
+	/*Sleep until interrupt*/
+	while(1){
+	sleep_enable();
+    15c2:	86 60       	ori	r24, 0x06	; 6
+    15c4:	80 83       	st	Z, r24
+    15c6:	80 81       	ld	r24, Z
+	sleep_cpu();	
+    15c8:	81 60       	ori	r24, 0x01	; 1
+    15ca:	80 83       	st	Z, r24
+    15cc:	88 95       	sleep
+    15ce:	fb cf       	rjmp	.-10     	; 0x15c6 <main+0x5a>
+
+000015d0 <_exit>:
+    15d0:	f8 94       	cli
+
+000015d2 <__stop_program>:
+    15d2:	ff cf       	rjmp	.-2      	; 0x15d2 <__stop_program>

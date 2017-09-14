@@ -89,9 +89,11 @@
 #include <conf_example.h>
 #include <string.h>
 #include <asf.h>
+//#include "koefficienter.h"
+
+#define M 9
 
 
-#define M 28
 
 
 
@@ -103,47 +105,66 @@
  */
 static void example_cca_interrupt_callback(void)
 {
-	//ioport_set_pin_high(J1_PIN0);
-
-		uint32_t invalue, outvalue;
-		invalue=4095;
-		static float xbuff[M+1]={0};
-		//static float b[M+1] ={0.3333, 0.3333, 0.3333};
-		static float b[M+1] ={-0.005549608069591, -0.02441465590089, -0.01761803676282,   0.0075711197912,
-			0.02238052877789,-0.002080458233243, -0.03175457082838,  -0.0107361469078,
-			0.0418150385962,  0.03540650319123, -0.05049486292566, -0.08762995174291,
-			0.05635874842652,   0.3118930052645,   0.4415904308913,   0.3118930052645,
-			0.05635874842652, -0.08762995174291, -0.05049486292566,  0.03540650319123,
-			0.0418150385962,  -0.0107361469078, -0.03175457082838,-0.002080458233243,
-			0.02238052877789,   0.0075711197912, -0.01761803676282, -0.02441465590089,
-			-0.005549608069591};
-		
-		float sum = 0;
-		
-		for(int k =M; k>0; k--){
-			xbuff[k]=xbuff[k-1];
-		}
-		xbuff[0]=(float)invalue;
-		
-		for(int i = 0; i <= M; i++){
-			sum += (xbuff[i]*b[i]);
-		}
-		outvalue=sum;
-		//ioport_set_pin_low(J1_PIN0);
+	uint32_t invalue=0, outvalue;
+	static float xbuff[M+1]={0};
+	float sum = 0;
+	ioport_toggle_pin(J1_PIN0);
+	invalue = adc_get_result(&ADCA,ADC_CH0);	
+				
+	for(int k =M; k>0; k--){
+		xbuff[k]=xbuff[k-1];
+	}
+	xbuff[0]=(float)invalue;
+	/*	
+	for(int i = 0; i <= M; i++){
+		sum += (xbuff[i]*b[i]);
+	}
+	outvalue =  sum * sum;
+	*/
+	
+	for(int i = 0; i <= M; i++){
+		sum += (xbuff[i]*1);
+	}
+	outvalue =  sum;
+	
+	ioport_toggle_pin(J1_PIN0);
+	adc_start_conversion(&ADCA, ADC_CH0);
 }
 
+
+/************************************************************************/
+/* Initialize  ADC                                                                     */
+/************************************************************************/
+
+void ADC_init(void){
+	CCP=0xD8;
+	CLK.PSCTRL=CLK_PSADIV_1_gc;
+	ADCA.CTRLB=ADC_CURRLIMIT_HIGH_gc;
+	ADCA.REFCTRL=ADC_REFSEL_INTVCC_gc;
+	ADCA.PRESCALER=ADC_PRESCALER_DIV4_gc;
+	ADCA.CH0.CTRL= ADC_CH_INPUTMODE_SINGLEENDED_gc;
+	ADCA.CH0.MUXCTRL=ADC_CH_MUXPOS_PIN0_gc;
+	ADCA.CH0.INTCTRL=ADC_CH_INTMODE_COMPLETE_gc | ADC_CH_INTLVL_HI_gc;
+	ADCA.CTRLA=ADC_ENABLE_bm;
+}
 
 
 int main(void)
 {
 	pmic_init();
-	board_init();
+	board_init();	
 	sysclk_init();
-	sleepmgr_init();
 
+	//ADC_init();
+	sleepmgr_init();
+	adc_enable(&ADCA);
+	adc_start_conversion(&ADCA, ADC_CH0);
+	//adc_wait_for_interrupt_flag(&ADCA, ADC_CH0);
 	cpu_irq_enable();
 
-	ioport_set_pin_dir(J1_PIN0,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(J1_PIN0, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(J2_PIN1,IOPORT_DIR_INPUT);
 
 #if (BOARD == XMEGA_A3BU_XPLAINED)
 	/* The status LED must be used as LED2, so we turn off
@@ -151,44 +172,37 @@ int main(void)
 	ioport_set_pin_high(LED3_GPIO);
 #endif
 
-	/*
-	* Unmask clock for TIMER_EXAMPLE
-	*/
+
 	tc_enable(&TIMER_EXAMPLE);
 
-	/*
-	* Configure interrupts callback functions for TIMER_EXAMPLE
-	* overflow interrupt, CCA interrupt and CCB interrupt
-	*/
 
 	tc_set_cca_interrupt_callback(&TIMER_EXAMPLE,
 			example_cca_interrupt_callback);
 
 
-	/*
-	* Configure TC in normal mode, configure period, CCA and CCB
-	* Enable both CCA and CCB channels
-	*/
 
 	tc_set_wgm(&TIMER_EXAMPLE, TC_WG_NORMAL);
+	
 	tc_write_period(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
+	
+	
 	tc_write_cc(&TIMER_EXAMPLE, TC_CCA, TIMER_EXAMPLE_PERIOD);
 	tc_enable_cc_channels(&TIMER_EXAMPLE,(enum tc_cc_channel_mask_enable_t)(TC_CCAEN));
-
-	/*
-	* Enable TC interrupts (overflow, CCA and CCB)
-	*/
-
+	
 	tc_set_cca_interrupt_level(&TIMER_EXAMPLE, TC_INT_LVL_LO);
-
-
+	tc_set_resolution(&TIMER_EXAMPLE, 31250);
 	/*
-	* Run TIMER_EXAMPLE at TIMER_EXAMPLE_PERIOD(31250Hz) resolution
-	*/
-	tc_set_resolution(&TIMER_EXAMPLE, TIMER_EXAMPLE_PERIOD);
-
 	do {
-		/* Go to sleep, everything is handled by interrupts. */
+		
 		sleepmgr_enter_sleep();
 	} while (1);
+
+	*/
+
+	//set_sleep_mode(SLEEP_MODE_IDLE);
+
+	while(1){
+		//sleep_cpu();
+		//sleep_enable();
+	}
 }
